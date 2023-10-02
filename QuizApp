@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+// Structure to represent a quiz question
+struct Question {
+    std::string questionText;
+    std::vector<std::string> options;
+    char correctOption;
+};
+
+// Function to display a question and its options
+void displayQuestion(const Question& q) {
+    std::cout << q.questionText << std::endl;
+    for (size_t i = 0; i < q.options.size(); ++i) {
+        std::cout << static_cast<char>('A' + i) << ". " << q.options[i] << std::endl;
+    }
+}
+
+// Function to get user's answer
+char getUserAnswer() {
+    std::cout << "Your answer (A/B/C/D): ";
+    char answer;
+    std::cin >> answer;
+    // Convert to uppercase
+    return std::toupper(answer);
+}
+
+// Function to check if the user's answer is correct
+bool isCorrect(const Question& q, char userAnswer) {
+    return std::toupper(q.correctOption) == userAnswer;
+}
+
+// Function to conduct the quiz
+void conductQuiz(const std::vector<Question>& questions) {
+    int score = 0;
+    for (const Question& q : questions) {
+        displayQuestion(q);
+        char userAnswer = getUserAnswer();
+        if (isCorrect(q, userAnswer)) {
+            std::cout << "Correct!" << std::endl;
+            score++;
+        } else {
+            std::cout << "Incorrect. The correct answer is " << q.correctOption << "."
+                      << std::endl;
+        }
+        std::cout << std::endl;
+    }
+
+    // Display final score
+    std::cout << "Quiz completed. Your score: " << score << "/" << questions.size() << std::endl;
+}
+
+int main() {
+    // Sample quiz questions
+    std::vector<Question> quiz = {
+        {"What is the capital of France?", {"Paris", "Berlin", "Rome", "Madrid"}, 'A'},
+        {"Which planet is known as the Red Planet?", {"Earth", "Mars", "Jupiter", "Venus"}, 'B'},
+        {"What is the largest mammal?", {"Elephant", "Blue Whale", "Giraffe", "Hippopotamus"}, 'B'},
+        {"Who wrote 'Romeo and Juliet'?", {"Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"}, 'B'}
+    };
+
+    // Shuffle the questions for variety
+    std::random_shuffle(quiz.begin(), quiz.end());
+
+    // Conduct the quiz
+    conductQuiz(quiz);
+
+    return 0;
+}
